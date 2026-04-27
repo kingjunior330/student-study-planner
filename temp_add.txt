@@ -1,0 +1,26 @@
+﻿  const addTask = async (task) => {
+    try {
+      const response = await fetch("http://localhost:5000/api/tasks", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: task.title,
+          day: task.day,
+          due_date: task.dueDate
+        }),
+      });
+      
+      if (response.ok) {
+        // Small delay to ensure database is updated
+        await new Promise(resolve => setTimeout(resolve, 500));
+        await fetchTasks();
+        return { success: true };
+      } else {
+        const data = await response.json();
+        return { success: false, error: data.error };
+      }
+    } catch (error) {
+      console.error("Error adding task:", error);
+      return { success: false, error: error.message };
+    }
+  };

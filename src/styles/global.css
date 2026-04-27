@@ -1,0 +1,28 @@
+* {
+    box-sizing: border-box;
+}
+
+html, body , #root {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+}
+
+body {
+    font-size: Arial, sans-serif;
+    background-color: #f5f7fb;
+    color: #222;
+}
+
+button {
+    font-family: inherit;
+}
+a {
+    text-decoration: none;
+}
+.home-page,
+.list-page,
+.add-page,
+.timetable-page {
+    margin-bottom: 20px;
+}

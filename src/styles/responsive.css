@@ -1,0 +1,58 @@
+@media (max-width: 1024px) {
+   .timetable {
+    grid-template-columns: 3,1fr;
+   }
+}
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap:15px;
+    }
+.hero {
+    flex-direction: column;
+    padding: 30px 20px;
+}
+.hero-text h2 {
+    font-size: 1.8rem;
+}
+.home-page,
+.list-page,
+.add-page,
+.timetable-page {
+    padding: 0 20px;
+}
+.timetable {
+    grid-template-columns: repeat(7, 1fr);
+  }
+}
+@media (max-width: 480px) {
+    .timetable {
+        grid-template-columns: 1fr;
+    }
+.task-item {
+    flex-direction: column;
+    align-self: flex-start;
+}
+.task-buttons {
+    width :100%;
+}
+.task-buttons button {
+    width: 100%;
+}
+.hero-buttons {
+    flex-direction: column;
+    width: 100%;
+}
+.hero-buttons button {
+    width: 100%;
+}
+.task-form {
+    flex-direction: column;
+}
+.task-form input,
+.task-form select,
+.task-form button {
+    width: 100%;        
+}
+}
