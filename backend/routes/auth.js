@@ -1,12 +1,15 @@
 ﻿const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const pool = require('../config/database');
 
 const router = express.Router();
 
+// Get pool from app
+const getPool = (req) => req.app.locals.pool;
+
 // Register
 router.post('/register', async (req, res) => {
+    const pool = getPool(req);
     const { username, email, password } = req.body;
 
     if (!username || !email || !password) {
@@ -38,12 +41,14 @@ router.post('/register', async (req, res) => {
 
         res.json({ message: 'User created', token, user: result.rows[0] });
     } catch (error) {
+        console.error('Register error:', error);
         res.status(500).json({ error: 'Server error' });
     }
 });
 
 // Login
 router.post('/login', async (req, res) => {
+    const pool = getPool(req);
     const { email, password } = req.body;
 
     if (!email || !password) {
@@ -72,6 +77,7 @@ router.post('/login', async (req, res) => {
 
         res.json({ message: 'Login successful', token, user: { id: user.id, username: user.username, email: user.email } });
     } catch (error) {
+        console.error('Login error:', error);
         res.status(500).json({ error: 'Server error' });
     }
 });
