@@ -1,7 +1,7 @@
 ﻿import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+const API_URL = "https://student-study-planner-production.up.railway.app/api";
 
 function Login({ onLogin }) {
   const [email, setEmail] = useState("");

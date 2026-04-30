@@ -10,8 +10,8 @@ import AddTask from "./pages/AddTask";
 import Timetable from "./pages/Timetable";
 import List from "./pages/List";
 
-// Use environment variable for API URL
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+// HARDCODED BACKEND URL FOR TESTING
+const API_URL = "https://student-study-planner-production.up.railway.app/api";
 
 function App() {
   const [tasks, setTasks] = useState([]);

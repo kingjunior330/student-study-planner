@@ -1,6 +1,8 @@
 ﻿import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
+const API_URL = "https://student-study-planner-production.up.railway.app/api";
+
 function Register({ onRegister }) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -15,7 +17,7 @@ function Register({ onRegister }) {
     setError("");
 
     try {
-      const response = await fetch("http://localhost:5000/api/auth/register", {
+      const response = await fetch(`${API_URL}/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, email, password }),
@@ -27,13 +29,12 @@ function Register({ onRegister }) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
         if (onRegister) onRegister(data.user);
-        navigate("/list");
+        navigate("/");
       } else {
         setError(data.error || "Registration failed");
       }
     } catch (err) {
       setError("Connection error. Make sure backend is running.");
-      console.error("Register error:", err);
     } finally {
       setLoading(false);
     }
