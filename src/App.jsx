@@ -10,6 +10,9 @@ import AddTask from "./pages/AddTask";
 import Timetable from "./pages/Timetable";
 import List from "./pages/List";
 
+// Use environment variable for API URL
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+
 function App() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -29,7 +32,7 @@ function App() {
     if (!token) return;
     
     try {
-      const response = await fetch("http://localhost:5000/api/tasks", {
+      const response = await fetch(`${API_URL}/tasks`, {
         headers: {
           "Authorization": `Bearer ${token}`
         }
@@ -50,7 +53,7 @@ function App() {
   const addTask = async (task) => {
     const token = localStorage.getItem("token");
     try {
-      const response = await fetch("http://localhost:5000/api/tasks", {
+      const response = await fetch(`${API_URL}/tasks`, {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",
@@ -77,7 +80,7 @@ function App() {
   const toggleComplete = async (id, currentStatus) => {
     const token = localStorage.getItem("token");
     try {
-      await fetch(`http://localhost:5000/api/tasks/${id}`, {
+      await fetch(`${API_URL}/tasks/${id}`, {
         method: "PUT",
         headers: { 
           "Content-Type": "application/json",
@@ -94,7 +97,7 @@ function App() {
   const deleteTask = async (id) => {
     const token = localStorage.getItem("token");
     try {
-      await fetch(`http://localhost:5000/api/tasks/${id}`, {
+      await fetch(`${API_URL}/tasks/${id}`, {
         method: "DELETE",
         headers: {
           "Authorization": `Bearer ${token}`
