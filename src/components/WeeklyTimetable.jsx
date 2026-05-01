@@ -1,4 +1,5 @@
 ﻿import DayColumn from "./DayColumn";
+import bgImage from "../assets/infs-202-project-picture.jpg";
 
 function WeeklyTimetable({ tasks }) {
   const safeTasks = Array.isArray(tasks) ? tasks : [];
