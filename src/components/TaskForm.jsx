@@ -8,20 +8,16 @@ function TaskForm({ onTaskAdded, isAdding }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (isAdding) return;
-
     if (!title || !day || !dueDate) {
       alert("Please fill in all fields");
       return;
     }
 
-    const taskData = {
-      title: title,
-      day: day,
-      dueDate: dueDate
-    };
-    
-    onTaskAdded(taskData);
+    onTaskAdded({ title, day, dueDate });
+
+    setTitle("");
+    setDay("Monday");
+    setDueDate("");
   };
 
   return (
@@ -36,7 +32,7 @@ function TaskForm({ onTaskAdded, isAdding }) {
           disabled={isAdding}
         />
       </div>
-      
+
       <div className="form-group">
         <label>Day</label>
         <select value={day} onChange={(e) => setDay(e.target.value)} disabled={isAdding}>
@@ -49,7 +45,7 @@ function TaskForm({ onTaskAdded, isAdding }) {
           <option>Sunday</option>
         </select>
       </div>
-      
+
       <div className="form-group">
         <label>Due Date</label>
         <input
@@ -59,7 +55,7 @@ function TaskForm({ onTaskAdded, isAdding }) {
           disabled={isAdding}
         />
       </div>
-      
+
       <button type="submit" className="submit-btn" disabled={isAdding}>
         {isAdding ? "Adding..." : "Add Task"}
       </button>

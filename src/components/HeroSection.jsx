@@ -10,10 +10,12 @@ function HeroSection() {
         Student Study Planner helps students organize tasks, manage weekly
         study goals and stay on top of deadlines in one simple place.
       </p>
+
       <div className="hero-buttons">
         <button onClick={() => navigate("/add")} className="get-started">
           Get Started
         </button>
+
         <button onClick={() => navigate("/timetable")} className="secondary-button">
           New Timetable
         </button>

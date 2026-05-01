@@ -11,7 +11,7 @@ function Navbar({ user, logout }) {
   return (
     <nav className="navbar">
       <h1 className="logo">Student Study Planner</h1>
-      
+
       <ul className="nav-links">
         <li><Link to="/">Home</Link></li>
         <li><Link to="/list">Tasks</Link></li>
@@ -19,11 +19,9 @@ function Navbar({ user, logout }) {
         <li><Link to="/timetable">Timetable</Link></li>
       </ul>
 
-      <div className="nav-right">
-        <div className="user-info">
-          <span>Welcome, {user?.username}!</span>
-          <button onClick={handleLogout} className="logout-btn">Logout</button>
-        </div>
+      <div className="user-info">
+        <span>Welcome, {user?.username}</span>
+        <button onClick={handleLogout} className="logout-btn">Logout</button>
       </div>
     </nav>
   );

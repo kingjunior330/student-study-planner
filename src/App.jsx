@@ -9,145 +9,129 @@ import Details from "./pages/Details";
 import AddTask from "./pages/AddTask";
 import Timetable from "./pages/Timetable";
 import List from "./pages/List";
-
-// HARDCODED BACKEND URL FOR TESTING
-const API_URL = "https://student-study-planner-production.up.railway.app/api";
+import API_URL from "./services/api";
 
 function App() {
   const [tasks, setTasks] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
 
+  // Load user from localStorage
   useEffect(() => {
-    const token = localStorage.getItem("token");
     const savedUser = localStorage.getItem("user");
-    if (token && savedUser) {
+    const token = localStorage.getItem("token");
+
+    if (savedUser && token) {
       setUser(JSON.parse(savedUser));
     }
-    setLoading(false);
   }, []);
 
+  // Fetch tasks
   const fetchTasks = async () => {
     const token = localStorage.getItem("token");
     if (!token) return;
-    
+
     try {
       const response = await fetch(`${API_URL}/tasks`, {
-        headers: {
-          "Authorization": `Bearer ${token}`
-        }
+        headers: { Authorization: `Bearer ${token}` }
       });
+
       const data = await response.json();
       setTasks(data.tasks || []);
     } catch (error) {
-      console.error("Error fetching tasks:", error);
+      console.error(error);
     }
   };
 
   useEffect(() => {
-    if (user) {
-      fetchTasks();
-    }
+    if (user) fetchTasks();
   }, [user]);
 
+  // Add task
   const addTask = async (task) => {
     const token = localStorage.getItem("token");
-    try {
-      const response = await fetch(`${API_URL}/tasks`, {
-        method: "POST",
-        headers: { 
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          title: task.title,
-          day: task.day,
-          due_date: task.dueDate
-        }),
-      });
-      
-      if (response.ok) {
-        await fetchTasks();
-        return { success: true };
-      }
-      return { success: false };
-    } catch (error) {
-      console.error("Error adding task:", error);
-      return { success: false };
+
+    const response = await fetch(`${API_URL}/tasks`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        title: task.title,
+        day: task.day,
+        due_date: task.dueDate
+      })
+    });
+
+    if (response.ok) {
+      fetchTasks();
+      return { success: true };
     }
+
+    return { success: false };
   };
 
+  // Toggle complete
   const toggleComplete = async (id, currentStatus) => {
     const token = localStorage.getItem("token");
-    try {
-      await fetch(`${API_URL}/tasks/${id}`, {
-        method: "PUT",
-        headers: { 
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify({ completed: currentStatus ? 0 : 1 }),
-      });
-      await fetchTasks();
-    } catch (error) {
-      console.error("Error updating task:", error);
-    }
+
+    await fetch(`${API_URL}/tasks/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({ completed: currentStatus ? 0 : 1 })
+    });
+
+    fetchTasks();
   };
 
+  // Delete
   const deleteTask = async (id) => {
     const token = localStorage.getItem("token");
-    try {
-      await fetch(`${API_URL}/tasks/${id}`, {
-        method: "DELETE",
-        headers: {
-          "Authorization": `Bearer ${token}`
-        }
-      });
-      await fetchTasks();
-    } catch (error) {
-      console.error("Error deleting task:", error);
-    }
+
+    await fetch(`${API_URL}/tasks/${id}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    fetchTasks();
+  };
+
+  // Auth
+  const handleAuth = (userData) => {
+    setUser(userData);
   };
 
   const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    localStorage.clear();
     setUser(null);
+    setTasks([]);
   };
-
-  if (loading) return <div>Loading...</div>;
-
-  if (!user) {
-    return (
-      <Router>
-        <Routes>
-          <Route path="/login" element={<Login onLogin={setUser} />} />
-          <Route path="/register" element={<Register onRegister={setUser} />} />
-          <Route path="*" element={<Navigate to="/login" />} />
-        </Routes>
-      </Router>
-    );
-  }
 
   return (
     <Router>
-      <Navbar user={user} logout={logout} />
+      {user && <Navbar user={user} logout={logout} />}
+
       <Routes>
-        <Route path="/" element={<Home task={tasks} />} />
-        <Route
-          path="/list"
-          element={
-            <List
-              task={tasks}
-              deleteTask={deleteTask}
-              toggleComplete={toggleComplete}
-            />
-          }
-        />
-        <Route path="/add" element={<AddTask addTask={addTask} />} />
-        <Route path="/timetable" element={<Timetable tasks={tasks} />} />
-        <Route path="/details/:id" element={<Details tasks={tasks} />} />
-        <Route path="*" element={<Navigate to="/" />} />
+        {!user ? (
+          <>
+            <Route path="/login" element={<Login onLogin={handleAuth} />} />
+            <Route path="/register" element={<Register onRegister={handleAuth} />} />
+            <Route path="*" element={<Navigate to="/login" />} />
+          </>
+        ) : (
+          <>
+            <Route path="/home" element={<Home task={tasks} />} />
+            <Route path="/list" element={<List task={tasks} deleteTask={deleteTask} toggleComplete={toggleComplete} />} />
+            <Route path="/add" element={<AddTask addTask={addTask} />} />
+            <Route path="/details/:id" element={<Details tasks={tasks} />} />
+            <Route path="/timetable" element={<Timetable tasks={tasks} />} />
+            <Route path="/" element={<Navigate to="/home" />} />
+            <Route path="*" element={<Navigate to="/home" />} />
+          </>
+        )}
       </Routes>
     </Router>
   );

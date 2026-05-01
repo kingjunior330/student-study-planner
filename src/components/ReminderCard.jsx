@@ -1,5 +1,6 @@
 ﻿function ReminderCard({ task }) {
-  const upcomingTask = task && task.length > 0 ? task[0] : null;
+  const tasks = Array.isArray(task) ? task : [];
+  const upcomingTask = tasks.find((t) => !t.completed) || tasks[0];
 
   return (
     <div className="reminder-card">
@@ -12,9 +13,7 @@
           <p><strong>Due Date:</strong> {upcomingTask.due_date || upcomingTask.dueDate}</p>
           <p>
             <strong>Status:</strong>{" "}
-            <span className={upcomingTask.completed ? "completed-status" : "pending-status"}>
-              {upcomingTask.completed ? "Completed ✓" : "Not Completed"}
-            </span>
+            {upcomingTask.completed ? "Completed ✓" : "Not Completed"}
           </p>
         </div>
       ) : (

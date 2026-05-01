@@ -1,4 +1,4 @@
-function DayColumn({ day, tasks }) {
+﻿function DayColumn({ day, tasks }) {
   return (
     <div className="day-column">
       <h2>{day}</h2>
@@ -7,10 +7,9 @@ function DayColumn({ day, tasks }) {
         <p>No tasks for {day}</p>
       ) : (
         tasks.map((task) => (
-          // 🔥 FIX: broken template string
-          <div key={task.id} className="task-item">
+          <div key={task.id} className="day-task">
             <h3>{task.title}</h3>
-            <small>{task.dueDate}</small>
+            <small>{task.due_date || task.dueDate}</small>
           </div>
         ))
       )}
