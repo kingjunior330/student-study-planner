@@ -1,0 +1,93 @@
+﻿===========================================
+DATABASE DESIGN - STUDENT STUDY PLANNER
+===========================================
+Student: Kgotla
+Course: INFS 202
+Date: April 2026
+
+===========================================
+DATABASE TYPE: PostgreSQL
+===========================================
+
+===========================================
+TABLE 1: users
+===========================================
+| Column        | Type         | Constraints              |
+|---------------|--------------|--------------------------|
+| id            | SERIAL       | PRIMARY KEY              |
+| username      | VARCHAR(50)  | UNIQUE, NOT NULL         |
+| email         | VARCHAR(100) | UNIQUE, NOT NULL         |
+| password_hash | VARCHAR(255) | NOT NULL                 |
+| created_at    | TIMESTAMP    | DEFAULT CURRENT_TIMESTAMP|
+
+===========================================
+TABLE 2: tasks
+===========================================
+| Column     | Type          | Constraints                    |
+|------------|---------------|--------------------------------|
+| id         | SERIAL        | PRIMARY KEY                    |
+| user_id    | INTEGER       | FOREIGN KEY → users(id)        |
+| title      | VARCHAR(255)  | NOT NULL                       |
+| day        | VARCHAR(20)   | NOT NULL                       |
+| due_date   | DATE          | NOT NULL                       |
+| completed  | BOOLEAN       | DEFAULT FALSE                  |
+| created_at | TIMESTAMP     | DEFAULT CURRENT_TIMESTAMP      |
+
+===========================================
+RELATIONSHIP DIAGRAM
+===========================================
+
+                    ┌─────────────────┐
+                    │      users      │
+                    ├─────────────────┤
+                    │ id (PK)         │
+                    │ username        │
+                    │ email           │
+                    │ password_hash   │
+                    └────────┬────────┘
+                             │
+                             │ 1
+                             │
+                    ┌────────┴────────┐
+                    │     tasks       │
+                    ├─────────────────┤
+                    │ id (PK)         │
+                    │ user_id (FK)    │
+                    │ title           │
+                    │ day             │
+                    │ due_date        │
+                    │ completed       │
+                    └─────────────────┘
+
+Relationship Type: ONE TO MANY (1:N)
+- One User can have MANY Tasks
+- Each Task belongs to ONE User
+
+===========================================
+SQL CREATE STATEMENTS
+===========================================
+
+-- Create users table
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create tasks table with foreign key
+CREATE TABLE tasks (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    day VARCHAR(20) NOT NULL,
+    due_date DATE NOT NULL,
+    completed BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+===========================================
+END OF DATABASE DESIGN
+===========================================
